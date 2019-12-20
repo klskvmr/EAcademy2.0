@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xml:th="http://thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+
+<html class="no-js lt-ie9 lt-ie8">
+<html class="no-js lt-ie9">
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+    <title>EAcademy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Free HTML5 Template by FreeHTML5.co"/>
+    <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
+    <meta name="author" content="FreeHTML5.co"/>
+
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:title" content=""/>
+    <meta property="og:image" content=""/>
+    <meta property="og:url" content=""/>
+    <meta property="og:site_name" content=""/>
+    <meta property="og:description" content=""/>
+    <meta name="twitter:title" content=""/>
+    <meta name="twitter:image" content=""/>
+    <meta name="twitter:url" content=""/>
+    <meta name="twitter:card" content=""/>
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" th:href="@{favicon.ico}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="../../../css/animate.css" rel="stylesheet">
+    <!-- Icomoon Icon Fonts-->
+    <link href="../../../css/icomoon.css" rel="stylesheet">
+    <!-- Simple Line Icons -->
+    <link href="../../../css/simple-line-icons.css" rel="stylesheet">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="../../../css/bootstrap.css">
+    <!-- Style -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <!-- Modernizr JS -->
+    <script src="../../../js/modernizr-2.6.2.min.js"></script>
+
+    <script src="../../../js/respond.min.js"></script>
+
+    <script>function setSubjectName() {
+        document.getElementById("subject_name").style.display = 'block';
+    }
+
+    function setTask() {
+        document.getElementById("task_name").style.display = 'block';
+    }
+
+    function createGroup() {
+        var groupName = document.getElementById("text").value;
+        var checkboxes = document.getElementsByClassName("checkbox");
+        var studentIds = []; // можно в массиве их хранить, если нужно использовать
+        for (var index = 0; index < checkboxes.length; index++) {
+            if (checkboxes[index].checked) {
+                studentIds.push(checkboxes[index].id); // положим в массив выбранный
+            }
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: location.href + "/add_group",
+            data: "{\"title\":\"" + groupName + "\",\"table\":" + null + ",\"studentIds\":" + JSON.stringify(studentIds) + "}",
+            success: function (response) {
+                alert(response);
+                //document.location.replace(location.href+"/"+response);
+            }
+        });
+    }
+
+    function createTask() {
+        var taskName = document.getElementById("title").value;
+        console.log(taskName);
+        var description = document.getElementById("description").value;
+        var maxScores = document.getElementById("maxScores").value;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: location.href + "/add_task",
+            data: "{\"taskName\":\"" + taskName + "\", \"description\":\"" + description + "\", \"maxScores\":\"" + maxScores + "\"}",
+            success: function (response) {
+                alert(response);
+                //document.location.replace(location.href + "/" + response);
+                //  $("#subject_name").attr("action",location.href+"/"+response).submit;
+            }
+        });
+    }
+
+    </script>
+    <style type="text/css">
+        #prokrutka {
+            text-align: left;
+            height: 200px; /* высота нашего блока */
+            width: 200px; /* ширина нашего блока */
+            background: #fff; /* цвет фона, белый */
+            border: 1px solid #C1C1C1; /* размер и цвет границы блока */
+            overflow-x: scroll; /* прокрутка по горизонтали */
+            overflow-y: scroll; /* прокрутка по вертикали */
+        }
+    </style>
+</head>
+
+<body>
+<header role="banner" id="fh5co-header">
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="navbar-header">
+                    <!-- Mobile Toggle Menu Button -->
+                    <a th:href="@{#}" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse"
+                       data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
+                    <a class="navbar-brand" href="/">EAcademy</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li class="dropdown" data-nav-section="pricing">
+                            <a class="external" data-toggle="dropdown">
+                                Группы
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu external" th:each="group : ${groups}">
+                                <li><a th:href="@{'/teacher/' + ${teacher.id} + '/group/' + ${group.id}}"
+                                       class="external" th:utext="${group.title}"></a></li>
+                            </ul>
+                        </li>
+
+
+                        <li class="dropdown" data-nav-section="pricing">
+                            <a class="external" id="dropDownMenuButton" data-toggle="dropdown">
+                                Дисциплины
+                            </a>
+                            <div class="dropdown-menu external" aria-labelledby="dropdownMenuButton">
+                                <th:block th:each="subject : ${subjects}">
+                                    <a class="dropdown-item external" th:href="@{'/teacher/' + ${teacher.id} + '/subject/' + ${subject.id}}"
+                                       th:utext="${subject.title}"></a>
+                                </th:block>
+                            </div>
+                        </li>
+
+                        <!--                        <li class="dropdown">-->
+                        <!--                            <a class="external" data-nav-section="testimony" data-toggle="dropdown">-->
+                        <!--                                Дисциплины-->
+                        <!--                                <b class="caret external"></b>-->
+                        <!--                            </a>-->
+                        <!--                            <ul class="dropdown-menu external" th:each="subject : ${subjects}">-->
+                        <!--                                <li><a th:href="@{'/teacher/' + ${teacher.id} + '/subject/' + ${subject.id}}"-->
+                        <!--                                       class="external" th:utext="${subject.title}"></a></li>-->
+                        <!--                            </ul>-->
+                        <!--                        </li>-->
+
+                        <li><a class="external" data-nav-section="pricing" th:href="@{'/user'}">
+                            <span>Моя страница</span></a>
+                        </li>
+                        <li><a class="external" th:href="@{'/logout'}"
+                               data-nav-section="blog">
+                            <span>Выход</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<section id="fh5co-explore" data-section="explore">
+    <div class="container external" style="width: 100%">
+        <div class="col-md-4 fh5co-services text-center">
+            <div class="row">
+                <div class="box-services">
+                    <div class="icon animate-box">
+                        <span><i class="icon-energy"></i></span>
+                    </div>
+                    <div class="fh5co-post animate-box">
+                        <a onclick="setSubjectName()"><h3>Подписать группу на предмет</h3></a>
+                    </div>
+                </div>
+                <form id="subject_name" style="display:none">
+                    <div class="form-group">
+                        <label for="tex" class="sr-only">Введите название группы</label>
+                        <input type="text" id="tex" class="form-control" placeholder="Введите название группы">
+                    </div>
+                    <div>
+                        <label aria-haspopup="true" aria-expanded="false">
+                            Выберите студентов
+                        </label>
+                        <div id="prokrutka">
+                            <div th:each="student : ${students}">
+                                <input class="checkbox" type="checkbox" th:id="${student.id}"
+                                       th:utext="${student.fio}+' '+${student.login}">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" onclick="createGroup()" class="btn btn-send-message btn-md"
+                           value="Готово">
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="box-services">
+                    <div class="icon animate-box">
+                        <span><i class="icon-screen-desktop"></i></span>
+                    </div>
+                    <div class="fh5co-post animate-box">
+                        <a class="pricing__feature" style="color:#000000"
+                           th:href="@{__${#httpServletRequest.requestURI}__/load_test}" value="">
+                            <h3>Загрузить новый тест</h3></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="box-services">
+                    <div class="icon animate-box">
+                        <span><i class="icon-energy"></i></span>
+                    </div>
+                    <div class="fh5co-post animate-box">
+                        <a onclick="setTask()"><h3>Добавить задание</h3></a>
+                    </div>
+                </div>
+            </div>
+            <form id="task_name" style="display:none">
+                <div class="form-group">
+                    <label for="title" class="sr-only">Заголовок задания</label>
+                    <input id="title" class="form-control" placeholder="Заголовок задания">
+                </div>
+                <div class="form-group">
+                    <label for="description" class="sr-only">Описание задания</label>
+                    <input id="description" class="form-control" placeholder="Описание задания">
+                </div>
+                <div class="form-group">
+                    <label for="maxScores" class="sr-only">Максимально возможные баллы</label>
+                    <input id="maxScores" class="form-control" placeholder="Максимальный балл">
+                </div>
+                <input type="submit" onclick="createTask()" class="btn btn-send-message btn-md"
+                       value="Готово">
+            </form>
+        </div>
+
+
+        <div class="col-md-8 fh5co-services text-center">
+            <div class="row" style="margin-bottom: 25px">
+                <div class="col-md-4" style="color:#000000"> Группы</div>
+            </div>
+            <th:block th:each="group : ${groups}">
+                <div class="col-md-4 external"><a
+                        th:href="@{'/teacher/' + ${teacher.id} + '/subjects/' + ${subject} + '/group/' + ${group.id}}"
+                        class="external" th:utext="${group.title}"></a>
+                </div>
+                <div class="col-md-4" id="teacherFio"></div>
+                <div class="form-group col-md-3">
+                    <input type="submit" class="btn btn-send-message btn-md"
+                           value="Перейти к проверке работ"/>
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+</section>
+
+<div id="fh5co-footer" role="contentinfo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 animate-box">
+                <h3 class="section-title">EAcademy</h3>
+                <p>Серверное программное решение для учета успеваемости и тестирования студентов.</p>
+            </div>
+            <div class="col-md-4 animate-box">
+                <h3 class="section-title">Наш адрес</h3>
+                <ul class="contact-info">
+                    <li><i class="icon-map"></i>Окружная ул., 29В, Новосибирск, Новосибирская обл., 630020</li>
+                    <li><i class="icon-phone"></i>+7 913 789 67 77</li>
+                    <li><i class="icon-envelope"></i><a href="#">eacademy@gmail.com</a></li>
+                    <li><i class="icon-globe"></i><a href="#">www.eacademy.com</a></li>
+                </ul>
+                <h3 class="section-title">Свяжитесь с нами</h3>
+                <ul class="social-media">
+                    <li><a href="#" class="facebook"><i class="icon-facebook"></i></a></li>
+                    <li><a href="#" class="twitter"><i class="icon-twitter"></i></a></li>
+                    <li><a href="#" class="dribbble"><i class="icon-dribbble"></i></a></li>
+                    <li><a href="#" class="github"><i class="icon-github-alt"></i></a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 animate-box">
+                <h3 class="section-title">Обратная связь</h3>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name" class="sr-only">Введите логин</label>
+                        <input type="name" class="form-control" id="name" placeholder="Введите логин">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="sr-only">Введите email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Введите email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="sr-only">Сообщение</label>
+                        <textarea class="form-control" id="message" rows="7" placeholder="Сообщение"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="btn-submit" class="btn btn-send-message btn-md"
+                               value="Отправить сообщение">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- jQuery -->
+<script src="../../../js/jquery.min.js"></script>
+<!-- jQuery Easing -->
+<script src="../../../js/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="../../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<!-- Waypoints -->
+<script src="../../../js/jquery.waypoints.min.js"></script>
+<!-- Stellar Parallax -->
+<script src="../../../js/jquery.stellar.min.js"></script>
+<!-- Counters -->
+<script src="../../../js/jquery.countTo.js"></script>
+<!-- Main JS (Do not remove) -->
+<!-- Main JS (Do not remove) -->
+<script src="../../../js/main.js"></script>
+</body>
+</html>

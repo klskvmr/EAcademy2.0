@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    container_name: database
+    command: --serviceExecutor adaptive
+
+  server:
+    image: klskvmr/eacademy
+    environment:
+      - spring.data.mongodb.host=database
+    ports:
+      - 5184:8089

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show test</title>
+    <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <!--    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->
+    <!--    <script  th:src="@{ajax.js}"></script>-->
+
+
+</head>
+<script type="text/javascript">
+
+
+
+
+function displayContents() {
+<!-- var line="";-->
+<!--     for (let i=0; i<testmodel.test.length; i++){-->
+<!---->
+<!--        for (let j=0; j<length; j++){-->
+<!--            var idUser = document.getElementById('checkedItems'+i+j).value;-->
+<!--            var line += idUser"<br/>" ;-->
+<!--        }-->
+<!--     }-->
+    var contents = $("#testform").serialize("") ;
+
+<!--    var indexed_array = {};-->
+<!---->
+<!--    $.map(contents, function(n, i){-->
+<!--        indexed_array[n['name']] = n['value'];-->
+<!--    });-->
+    console.log(contents);
+    $.ajax({
+               type: "POST",
+               contentType: "application/json; charset=UTF-8",
+               url: document.URL + "/saveCurrentResult",
+               data: JSON.stringify(contents),
+               dataType: "Json",
+    });
+}
+<!--/student/128/47e26186-2dca-4345-835c-cc5391327688-->
+<!--               url: "/student/128/47e26186-2dca-4345-835c-cc5391327688/saveCurrentResult",-->
+
+
+
+
+
+
+
+</script>
+<body style="background-color:DodgerBlue">
+<br/>
+<h1 align="center" style="color:white" th:utext="${testmodel.name}"></h1>
+
+
+<div class="widget">
+    <br/>
+    <form id="testform" th:action="@{__${#httpServletRequest.requestURI}__/finishtest}" th:object="${testAnswers}"
+          method="post">
+        <th:block th:each="task,taskStat : ${testmodel.test}">
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="width:777px;
+                                border-radius: 20px 20px;
+                                border:5px solid #444444;
+                                background-color:lightgray;">
+                        <h4 style="border-bottom: 2px solid maroon" align="center" th:utext="'Вопрос №'+${taskStat.count}"></h4>
+
+                        <legend th:utext="${task.question}"></legend>
+                        <th:block th:each="answer,answerStat : ${task.answers}">
+                            <input type="checkbox" th:field="*{checkedItems[__${taskStat.index}__]}"
+                                   th:value="${answerStat.count}"/>
+                            <label th:for="'checkedItems' + ${taskStat.index}+${answerStat.count}"
+                                   th:text="${answer}"></label>
+                            <br/>
+                        </th:block>
+<!--                        <button type="button" onclick="displayContents()">Сохранить текущий результат</button>-->
+                        <!--                        <button type="button" onclick="'javascript:displayContents(\'' + ${testmodel} + '\');'">Current Result</button>-->
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </th:block>
+        <div style="text-align:center">
+            <input align="center" type="submit" name="input" id="input" value="Отправить тест на проверку">
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show test</title>
+    <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+</head>
+<script type="text/javascript">
+</script>
+<body style="background-color:DodgerBlue">
+<div class="widget">
+    <div class="container" style="text-align: center">
+        <br/>
+        <div class="col-md-12" style="width:1200px;
+                                        border-radius: 20px 20px;
+                                        border:5px solid #444444;
+                                        background-color:lightgray;
+                                        top:50px;">
+            <h1 align="center" style="color:black" th:utext="'Тест уже был выполнен ранее!'"></h1>
+            <br/>
+            <h2 align="center" style="color:black" th:utext="'Результаты вашего тестирования:'"></h2>
+            <br/>
+            <h3 align="left" style="color:black"
+                th:utext="'Вы набрали: '+${testResult.result}+' из '+${#lists.size(testmodel.test)+' баллов'}"></h3>
+            <h3 align="left" style="color:black" th:utext="'Ваша оценка: '+${testResult.mark}"></h3>
+        </div>
+        <br/>
+    </div>
+</div>
+
+
+<div class="widget">
+    <div class="container" style="text-align: center">
+        <div class="col-md-12" style="top:50px">
+            <form th:action="@{/student/__${testResult.studentId}__/student_tests}">
+                <div style="text-align: center">
+                    <button style="border-radius:5px 5px"> К списку доступных тестов</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="widget">
+    <br/>
+    <br/>
+    <br/>
+    <h1 align="center" style="color:white" th:utext="'На данные вопросы вы дали неправильные ответы:'"></h1>
+
+
+    <form th:object="${testAnswers}"
+          method="post">
+        <th:block th:each="badAnswer,badAnswerStat : ${badAnswers}">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="width:777px;
+                                            border-radius: 20px 20px;
+                                            border:5px solid #444444;
+                                            background-color:lightgray;
+                                            top:30px;">
+                        <h4 style="border-bottom: 2px solid maroon" align="center"
+                            th:utext="'Вопрос №'+${badAnswer+1}"></h4>
+
+                        <legend th:utext="${testmodelFinal.test[__${badAnswer}__].question}"></legend>
+                        <!--                        <th:block th:each="answer,answerStat : ${testmodel.test[__${badAnswer}__].answers}">-->
+                        <th:block th:each="answ,answerStat : ${testmodelFinal.test[__${badAnswer}__].trueAnswer}">
+
+                            <input type="checkbox" th:field="*{checkedItems[__${badAnswerStat.index}__]}"
+                                   th:value="${answerStat.count}"/>
+                            <label th:for="'checkedItems' + ${badAnswerStat.index}+${answerStat.count}"
+                                   th:utext="${testmodelFinal.test[__${badAnswer}__].answers[__${answ-1}__]}"
+                                   th:style="'color: green'"></label>
+                            <br/>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </th:block>
+    </form>
+</div>
+</body>
+</html>

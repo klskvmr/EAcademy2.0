@@ -1,0 +1,68 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'com.google.cloud.tools.jib' version '1.8.0'
+}
+apply plugin: 'java'
+apply plugin: "application"
+mainClassName = "ru.eltex.Main"
+run {
+    standardInput = System.in
+}
+
+repositories {
+    mavenCentral()
+}
+
+jib {
+    to {
+        image = "klskvmr/eacademy"
+    }
+    container {
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-parent")
+// https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    compile "org.thymeleaf:thymeleaf-spring4:3.0.1.RELEASE"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
+
+//    compile group: 'org.webjars', name: 'bootstrap', version: '4.1.3'
+
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '5.1.8.RELEASE'
+//    compile group: 'org.webjars', name: 'jquery', version: '3.4.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.9'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.1.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.6.RELEASE', ext: 'pom'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.7.RELEASE'
+
+
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    // SPRING DATA. MONGODB
+    compile "org.springframework.boot:spring-boot-starter-data-mongodb"
+
+    // JACKSON
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    // LOMBOK
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+
+}
+
