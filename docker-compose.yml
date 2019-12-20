@@ -10,4 +10,4 @@ services:
     environment:
       - spring.data.mongodb.host=database
     ports:
-      -5184:8089 
+      - 5184:8089
