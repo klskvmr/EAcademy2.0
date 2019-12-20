@@ -1,4 +1,4 @@
-version: '3.1'
+version: '2'
 services:
   mongo:
     image: mongo
@@ -10,4 +10,4 @@ services:
     environment:
       - spring.data.mongodb.host=database
     ports:
-      - 5184:8089
+      -5184:8089 
