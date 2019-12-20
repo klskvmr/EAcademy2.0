@@ -3,7 +3,6 @@ services:
   mongo:
     image: mongo
     container_name: database
-    command: --serviceExecutor adaptive
 
   server:
     image: klskvmr/eacademy
